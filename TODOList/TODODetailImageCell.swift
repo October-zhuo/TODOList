@@ -18,6 +18,7 @@ class TODODetailImageCell: UITableViewCell, UIImagePickerControllerDelegate, UIN
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier);
+        self.selectionStyle = .none;
          setupUI();
     }
     
@@ -58,7 +59,8 @@ class TODODetailImageCell: UITableViewCell, UIImagePickerControllerDelegate, UIN
     
     private func setupUI(){
         addPictureBtn = UIButton();
-        addPictureBtn.backgroundColor = .gray;
+        addPictureBtn.setBackgroundImage(UIImage.init(named: "add_image"), for: .normal);
+        addPictureBtn.backgroundColor = UIColor.colorWithHexString(hex: "0xcccccc");
         addPictureBtn.addTarget(self, action: #selector(didClickAddButton), for: .touchUpInside);
         self.contentView.addSubview(addPictureBtn);
         addPictureBtn.frame =  CGRect(x:kButtonMargin,y:kButtonMargin,width:kButtonWidthAndHeight,height:kButtonWidthAndHeight);
@@ -103,7 +105,7 @@ class TODODetailImageCell: UITableViewCell, UIImagePickerControllerDelegate, UIN
                 
             });
             alert.addAction(sureAction);
-            UIApplication.shared.keyWindow?.rootViewController?.show(alert, sender: nil);
+            UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil);
         }
     }
 

@@ -12,6 +12,7 @@ import AVFoundation
 class TODORecorder : NSObject, AVAudioRecorderDelegate{
     var recorder : AVAudioRecorder!;
     let session = AVAudioSession.sharedInstance();
+    var recordFinishedCallback : ((_ isSuccess: Bool, _ itemName: String?) -> Void)!;
     
     func startSession() {
         do{
@@ -35,30 +36,27 @@ class TODORecorder : NSObject, AVAudioRecorderDelegate{
         }
     }
     
-    func startRecord() {
-        loadRecord();
+    func startRecord(name: String) {
+        loadRecord(name: name);
         startSession();
         recorder.prepareToRecord();
         recorder.record();
     }
     
-    func stopRecord() {
+    func stopRecord(){
         recorder.stop();
         stopSession();
     }
     
-    func loadRecord () {
-        let settings = [AVSampleRateKey:8000, AVFormatIDKey:kAudioFormatLinearPCM, AVLinearPCMBitDepthKey:16, AVNumberOfChannelsKey:1, AVLinearPCMIsBigEndianKey: false, AVLinearPCMIsFloatKey:false] as [String : Any];
-        let fileManager = FileManager.default;
-        let path = NSHomeDirectory()+"/Library/Caches/audio";
-        if fileManager.fileExists(atPath: path) == false{
-            do{
-                try fileManager.createDirectory(atPath: path, withIntermediateDirectories: true, attributes: nil);
-            }catch{
-                print(error);
-            }
-        }
-        let name = path + "/test.wav";
+    func loadRecord (name: String) {
+        let settings = [AVSampleRateKey:NSNumber(value: 8000),
+                        AVFormatIDKey:NSNumber(value: kAudioFormatLinearPCM),
+                        AVLinearPCMBitDepthKey:NSNumber(value: 16),
+                        AVNumberOfChannelsKey:NSNumber(value: 1),
+                        AVEncoderAudioQualityKey: NSNumber(value: AVAudioQuality.min.rawValue)
+                        ] as [String : Any];
+        let path = TODOFileHelper.shared.audioCachePath()
+        let name = path! + "/\(name)" + ".caf";
         do{
             try recorder = AVAudioRecorder.init(url: URL.init(fileURLWithPath: name), settings: settings);
             recorder.delegate = self;
@@ -68,6 +66,9 @@ class TODORecorder : NSObject, AVAudioRecorderDelegate{
     }
     
     func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
+        if recordFinishedCallback != nil{
+            self.recordFinishedCallback(flag, recorder.url.lastPathComponent);
+        }
         if flag{
             print(recorder);
         }else{

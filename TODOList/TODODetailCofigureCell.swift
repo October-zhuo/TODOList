@@ -15,10 +15,10 @@ class TODODetailCofigureCell: UITableViewCell {
     fileprivate lazy var textBtn = UIButton();
     fileprivate lazy var imageBtn = UIButton();
     fileprivate lazy var audioBtn  = UIButton();
-    fileprivate lazy var textField = UITextField();
     
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier);
+        self.selectionStyle = .none;
         setupUI();
     }
     
@@ -30,25 +30,22 @@ class TODODetailCofigureCell: UITableViewCell {
         self.contentView.addSubview(textBtn);
         self.contentView.addSubview(imageBtn);
         self.contentView.addSubview(audioBtn);
-        self.contentView.addSubview(textField);
+        
         let width = UIScreen.main.bounds.size.width / 3.0;
         
-        textBtn.setTitle("文字", for: UIControlState.normal);
-        textBtn.backgroundColor = UIColor.gray;
+        textBtn.setTitle("文字任务", for: UIControlState.normal);
+        textBtn.backgroundColor = UIColor.colorWithHexString(hex: "0xe08e60");
         textBtn.tag = 1000;
         textBtn.addTarget(self, action: #selector(didClickButton), for: .touchUpInside);
-        imageBtn.setTitle("图片", for: UIControlState.normal);
-        imageBtn.backgroundColor = UIColor.lightGray;
+        imageBtn.setTitle("图片任务", for: UIControlState.normal);
+        imageBtn.backgroundColor = UIColor.colorWithHexString(hex: "0x3b7291");
         imageBtn.tag = 1001;
         imageBtn.addTarget(self, action: #selector(didClickButton), for: .touchUpInside);
-        audioBtn.setTitle("音频", for: UIControlState.normal);
-        audioBtn.backgroundColor = UIColor.gray;
+        audioBtn.setTitle("音频任务", for: UIControlState.normal);
+        audioBtn.backgroundColor = UIColor.colorWithHexString(hex: "0x96c1b7");
         audioBtn.tag = 1002;
         audioBtn.addTarget(self, action: #selector(didClickButton), for: .touchUpInside);
         
-        let view = UIView.init(frame:  CGRect(x:0,y:0,width:100,height:100));
-        view.backgroundColor = UIColor.brown;
-        textField.inputAccessoryView = view;
         textBtn.snp.makeConstraints { (make) in
             make.left.equalTo(self.contentView);
             make.top.equalTo(self.contentView);
@@ -70,12 +67,6 @@ class TODODetailCofigureCell: UITableViewCell {
             make.width.equalTo(width);
             }
         
-        textField.snp.makeConstraints { (make) in
-            make.width.equalTo(0);
-            make.height.equalTo(0);
-            make.left.equalTo(0);
-            make.top.equalTo(0);
-        }
     }
 
     @objc func didClickButton(button: UIButton) {

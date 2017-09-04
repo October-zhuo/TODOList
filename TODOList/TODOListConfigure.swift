@@ -13,34 +13,32 @@ let dateFormatingString = "M月d日\(dateSeperater)HH:mm";
 
 import UIKit
 
-extension TODOListController{
+extension TODOListTableViewCell{
     
-    
-    func configureListCell(cell:TODOListTableViewCell, task:TODOTask)  {
+func configureListCell(task:TODOTask)  {
         if task.taskType == "audio" {
-           cell.nameLabel.text = "[音频]";
+           nameLabel.text = "[音频]";
         }else if task.taskType == "image"{
-            cell.nameLabel.text = "[图片]";
+            nameLabel.text = "[图片]";
         }else{
-            cell.nameLabel.text = task.text;
+            nameLabel.text = task.text;
         }
         
         //statusLabel
         if task.isDone {
-            cell.statusLabel.text = "✓";
+            statusLabel.text = "✓";
         }else{
-            cell.statusLabel.text = "";
+            statusLabel.text = "";
         }
 
         //timeLabel
-        let date = DateStringConverter.shared.dateFromString(originString: task.createdAt!);
+        let date = DateStringConverter.shared.dateFromString(originString: task.createdAt!, formatterString: "yyyy-MM-dd HH:mm:ss");
         if let time : Date = date {
             let tempString = timeFactoryMethod(time: time);
-            cell.timeLable.text = "\(tempString)";
+            timeLable.text = "\(tempString)";
         }else{
-            cell.timeLable.text = "╮(╯▽╰)╭哎";
+            timeLable.text = "╮(╯▽╰)╭哎 ,怎么没有日期呢";
         }
-        
     }
         
     fileprivate func timeFactoryMethod(time:Date) ->  String{

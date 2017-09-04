@@ -25,7 +25,8 @@ class TODODetailTextCell: UITableViewCell, UITextViewDelegate, TODODetailListCel
         toolBar.items = [cancleItem,flexItem, doneItem];
         textView = UITextView();
         textView.delegate = self;
-        textView.backgroundColor = .lightGray;
+        textView.font = UIFont.systemFont(ofSize: 16);
+        textView.backgroundColor = UIColor.colorWithHexString(hex: "0xcccccc");
         textView.inputAccessoryView = toolBar;
         self.contentView.addSubview(textView);
         textView.snp.makeConstraints { (make) in

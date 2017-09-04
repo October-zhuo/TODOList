@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 
 class TODOFileHelper: NSObject {
+     static let shared = TODOFileHelper();
      func saveImage(image: UIImage, name: String) -> Bool {
         let path = imageCachePath() + "\(name)"
         let data = UIImagePNGRepresentation(image);
@@ -69,7 +70,7 @@ class TODOFileHelper: NSObject {
         return path;
     }
     
-    private func audioCachePath() -> String! {
+     func audioCachePath() -> String! {
         let fileManager = FileManager.default;
         let path = NSHomeDirectory()+"/Library/Caches/audio";
         if fileManager.fileExists(atPath: path) == false{

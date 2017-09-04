@@ -16,14 +16,14 @@ class DateStringConverter: NSObject {
         super.init();
     }
     
-    func dateFromString(originString: String) -> Date? {
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss";
+    func dateFromString(originString: String, formatterString: String) -> Date? {
+        formatter.dateFormat = formatterString;
         let date = formatter.date(from: originString);
         return date;
     }
     
-    func stringFromDate(originDate:Date) -> String? {
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss";
+   func stringFromDate(originDate:Date, formatterString: String) -> String? {
+        formatter.dateFormat = formatterString;
         let resultString = formatter.string(from: originDate);
         return resultString;
     }

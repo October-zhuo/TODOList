@@ -2,9 +2,11 @@
 # platform :ios, '9.0'
 
 use_frameworks!
-target 'TODOList' do
-  pod 'RxSwift',    '~> 3.0'
-  pod 'RxCocoa',    '~> 3.0'
-  pod 'SnapKit'
-  pod 'RealmSwift'
+
+targetsArray = [ 'TODOList', 'TODOListExtension']
+targetsArray.each do |t|
+    target t do
+        pod 'SnapKit'
+        pod 'RealmSwift'
+    end
 end

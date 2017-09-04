@@ -21,7 +21,7 @@ class TODOTask: Object{
     dynamic var isDone : Bool = false;
     dynamic var createdAt : String? = nil;
     dynamic var expiredAt : Date? = nil;
-    dynamic var audioURL : String = "";
+    dynamic var audioName : String = "";
     dynamic var text : String? = nil;
     let imageList = List<TODOImage>();
     
@@ -29,10 +29,9 @@ class TODOTask: Object{
         return "createdAt";
     }
     
-    
     static func copyFromOtherTask(originTask: TODOTask) ->  TODOTask{
         let task = TODOTask();
-        task.audioURL = (originTask.audioURL);
+        task.audioName = (originTask.audioName);
         task.createdAt = originTask.createdAt;
         task.expiredAt = originTask.expiredAt;
         for image in originTask.imageList {

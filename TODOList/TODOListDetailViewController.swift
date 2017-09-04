@@ -7,11 +7,9 @@
 //
 
 import UIKit
-import RxSwift
 import RealmSwift
 import Realm
 
-let TODOListDetailViewCellID = "TODOListDetailViewCell";
 public let TODODetailDatePickCellID = "TODODetailDatePickCellID";
 public let TODODetailTaskStatusCellID = "TODODetailTaskStatusCellID";
 public let TODODetailCofigureCellID = "TODODetailCofigureCellID";
@@ -49,11 +47,18 @@ class TODOListDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad();
         setupUI();
+        configureTabelviewCell();
     }
     
-    fileprivate func setupUI(){
+    fileprivate func setupUI() {
+        self.title = isEdit == true ? "任务详情":"添加任务";
+        
+        let left = UIBarButtonItem.init(image: UIImage.init(named: "nav_back"), style: .plain, target: self, action: #selector(didClickBackItem));
+        left.tintColor = UIColor.gray;
+        navigationItem.leftBarButtonItem = left;
+        
         sureButton = UIButton.init(frame: .zero);
-        sureButton.backgroundColor = .orange;
+        sureButton.backgroundColor = UIColor.colorWithHexString(hex: "0x27a59c");
         sureButton.setTitle("完成", for: .normal);
         sureButton.setTitleColor(.white, for: .normal);
         sureButton.addTarget(self, action: #selector(didClickSureBtn), for: .touchUpInside);
@@ -66,15 +71,6 @@ class TODOListDetailViewController: UIViewController {
         }
         
         tableView = UITableView.init(frame: .zero);
-        tableView.register(TODOListDetailViewCell.self, forCellReuseIdentifier: TODOListDetailViewCellID);
-        tableView.register(TODODetailCofigureCell.self, forCellReuseIdentifier: TODODetailCofigureCellID);
-        tableView.register(TODODetailDatePickCell.self, forCellReuseIdentifier: TODODetailDatePickCellID);
-        tableView.register(TODODetailTaskStatusCell.self, forCellReuseIdentifier: TODODetailTaskStatusCellID);
-        tableView.register(TODODetailHeaderView.self, forHeaderFooterViewReuseIdentifier: TODODetailHeaderViewID);
-        tableView.register(TODODetailTextCell.self, forCellReuseIdentifier: TODODetailTextCellID);
-        tableView.register(TODODetailImageCell.self, forCellReuseIdentifier: TODODetailImageCellID);
-        tableView.register(TODODetailAudioCell.self, forCellReuseIdentifier: TODODetailAudioCellID);
-        
         tableView.separatorStyle = .none;
         tableView.delegate = self;
         tableView.dataSource = self;
@@ -87,17 +83,41 @@ class TODOListDetailViewController: UIViewController {
         }
     }
 
+    func configureTabelviewCell() {
+        tableView.register(TODODetailCofigureCell.self, forCellReuseIdentifier: TODODetailCofigureCellID);
+        tableView.register(TODODetailDatePickCell.self, forCellReuseIdentifier: TODODetailDatePickCellID);
+        tableView.register(TODODetailTaskStatusCell.self, forCellReuseIdentifier: TODODetailTaskStatusCellID);
+        tableView.register(TODODetailHeaderView.self, forHeaderFooterViewReuseIdentifier: TODODetailHeaderViewID);
+        tableView.register(TODODetailTextCell.self, forCellReuseIdentifier: TODODetailTextCellID);
+        tableView.register(TODODetailImageCell.self, forCellReuseIdentifier: TODODetailImageCellID);
+        tableView.register(TODODetailAudioCell.self, forCellReuseIdentifier: TODODetailAudioCellID);
+    }
+    
     @objc func didClickSureBtn(){
         removeObserverIfNeed();
         if isEdit{
-            TODOListStorage().refreshTask(task: task);
+            TODOListStorage.sharedStorage.refreshTask(task: task);
+            navigationController?.popViewController(animated: true);
         }else{
- //MARK:- storage 单例
-            let date = Date();
-            task.createdAt = DateStringConverter.shared.stringFromDate(originDate: date);
-            TODOListStorage().addTask(task: task);
+            if task.audioName.characters.count <= 0  && task.imageList.count <= 0 && task.text == nil {
+                let alert = UIAlertController.init(title: "╮(╯▽╰)╭", message: "来了，不留下点什么？", preferredStyle: .alert);
+                let sureAction = UIAlertAction.init(title: "好的", style: .default, handler: { (action) in
+                    
+                });
+                alert.addAction(sureAction);
+                self.navigationController?.present(alert, animated: true, completion: nil);
+            }else {
+                let date = Date();
+                task.createdAt = DateStringConverter.shared.stringFromDate(originDate: date, formatterString: "yyyy-MM-dd HH:mm:ss");
+                TODOListStorage.sharedStorage.addTask(task: task);
+                navigationController?.popViewController(animated: true);
+            }
         }
-        navigationController?.popViewController(animated: true);
+    }
+    
+    @objc func didClickBackItem() {
+        removeObserverIfNeed();
+        self.navigationController?.popViewController(animated: true);
     }
 }
 

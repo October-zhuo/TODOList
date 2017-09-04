@@ -12,19 +12,21 @@ import RealmSwift
 
 class TODOListStorage: NSObject {
     
-    public let textType = "text";
-    public let imageType = "image";
-    public let audioType = "audio";
+    let textType = "text";
+    let imageType = "image";
+    let audioType = "audio";
     var token : NotificationToken!
     var dbChangeCallback : ((RealmCollectionChange<Results<TODOTask>>) -> Void)!
-    static func storage(){
-        let docSting = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).last!;
-        let pathSting = docSting + ("/TODOListDatabase.realm");
-        print(pathSting);
+    static let sharedStorage = TODOListStorage();
+    private override init() {
+        super.init();
+    }
+    static func storage() {
+        let containerURL = FileManager.default.containerURL(forSecurityApplicationGroupIdentifier: "group.TODOListZhuo");
+        let targetURL = containerURL?.appendingPathComponent("Library/Caches/TODOListDatabase.realm");
+        print(targetURL!);
         var configuration = Realm.Configuration();
-        let url = URL.init(fileURLWithPath: pathSting);
-        print(url);
-        configuration.fileURL = url;
+        configuration.fileURL = targetURL;
         Realm.Configuration.defaultConfiguration = configuration;
         let _ =  try! Realm();
     }
@@ -58,9 +60,9 @@ class TODOListStorage: NSObject {
 
     }
     
-    func fetchAllTasks() -> Results<TODOTask> {
+   func fetchAllTasks() -> Results<TODOTask> {
         let realm = try! Realm();
-        let reslutArr = realm.objects(TODOTask.self).sorted(byKeyPath:"createdAt");
+        let reslutArr = realm.objects(TODOTask.self).sorted(byKeyPath:"createdAt", ascending:false);
         token =  reslutArr.addNotificationBlock { [weak self](changes: RealmCollectionChange) in
             guard let callback = self?.dbChangeCallback else{return;}
             callback(changes);

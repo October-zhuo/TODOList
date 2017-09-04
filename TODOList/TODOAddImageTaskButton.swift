@@ -16,7 +16,7 @@ class TODOAddImageTaskButton: UIButton {
         super.init(frame: frame);
         let clearButton = UIButton();
         self.addSubview(clearButton);
-        clearButton.backgroundColor = .orange;
+        clearButton.setImage(UIImage.init(named: "image_close"), for: .normal);
         clearButton.addTarget(self, action: #selector(didClickClearButton), for: .touchUpInside);
         clearButton.snp.makeConstraints { (make) in
             make.right.equalTo(self);

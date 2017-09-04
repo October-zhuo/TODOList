@@ -12,6 +12,9 @@ let TODOListDetailViewCellTextID = "TODOListDetailViewCellTextID";
 let TODOListDetailViewCellImageID = "TODOListDetailViewCellImageID";
 let TODOListDetailViewCellAudioID = "TODOListDetailViewCellAudioID";
 
+let textType = "text";
+let imageType = "image";
+let audioType = "audio";
 let headerViewHeight : CGFloat = 50;
 
 extension TODOListDetailViewController : UITableViewDataSource{
@@ -39,18 +42,18 @@ extension TODOListDetailViewController : UITableViewDataSource{
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch indexPath.section {
         case 0:
-            if self.task.taskType == "text" {
+            if self.task.taskType == textType {
                  let cell = tableView.dequeueReusableCell(withIdentifier: TODODetailTextCellID) as! TODODetailTextCell;
                 cell.endEditCallback = {(result: String) in
                     self.task.text = result;
                 }
                 cell.loadTask(task: task);
                 return cell;
-            }else if self.task.taskType == "image" {
+            }else if self.task.taskType == imageType {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TODODetailImageCellID) as! TODODetailImageCell;
                 cell.loadTask(task: task);
                 return cell;
-            }else if self.task.taskType == "audio" {
+            }else if self.task.taskType == audioType {
                 let cell = tableView.dequeueReusableCell(withIdentifier: TODODetailAudioCellID) as! TODODetailAudioCell;
                 cell.loadTask(task: task);
                 return cell;
@@ -58,11 +61,11 @@ extension TODOListDetailViewController : UITableViewDataSource{
                 let cell = tableView.dequeueReusableCell(withIdentifier: TODODetailCofigureCellID) as! TODODetailCofigureCell;
                 cell.clickBtnCallback = {(button:UIButton)->Void in
                     if button.tag == 1000 {
-                         self.task.taskType = "text";
+                         self.task.taskType = textType;
                     }else if button.tag == 1001{
-                        self.task.taskType = "image";
+                        self.task.taskType = imageType;
                     }else if button.tag == 1002{
-                        self.task.taskType = "audio";
+                        self.task.taskType = audioType;
                     }
                     tableView.reloadData();
                 }
@@ -72,9 +75,11 @@ extension TODOListDetailViewController : UITableViewDataSource{
             switch indexPath.row {
             case 0:
                 let cell = tableView.dequeueReusableCell(withIdentifier: TODODetailTaskStatusCellID) as! TODODetailTaskStatusCell;
+                cell.loadTask(task: task);
                 return cell;
             case 1:
                 let cell = tableView.dequeueReusableCell(withIdentifier: TODODetailDatePickCellID) as! TODODetailDatePickCell;
+                 cell.loadTask(task: task);
                 return cell;
             default:
                 return UITableViewCell();
@@ -104,6 +109,5 @@ extension TODOListDetailViewController : UITableViewDataSource{
         if  let cell = tableView.cellForRow(at: IndexPath.init(row: 0, section: 0)) as? TODODetailImageCell{
             cell.removeAllObservers();
         }
-        
     }
 }
